@@ -12,8 +12,23 @@ export function* in_pairs(iterable) {
   }
 }
 
+export function* interleave(iterable1, iterable2) {
+  const iterator1 = iterable1[Symbol.iterator]();
+  const iterator2 = iterable2[Symbol.iterator]();
+  let current1 = iterator1.next();
+  let current2 = iterator2.next();
+  while (!current1.done && !current2.done) {
+    yield current1.value;
+    yield current2.value;
+    current1 = iterator1.next();
+    current2 = iterator2.next();
+  }
+}
+
 export const is_symbol = ast =>
   typeof ast === "symbol" && !/^:/.test(Symbol.keyFor(ast));
 
 export const is_keyword = ast =>
   typeof ast === "symbol" && /^:/.test(Symbol.keyFor(ast));
+
+export const Atom = {};
