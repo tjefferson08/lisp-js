@@ -10,7 +10,11 @@ const runTestCases = cases =>
   });
 
 test("numbers", () => {
-  const cases = [{ input: "1", expected: 1 }, { input: "100", expected: 100 }];
+  const cases = [
+    { input: "1", expected: 1 },
+    { input: "-123", expected: -123 },
+    { input: "100", expected: 100 }
+  ];
 
   runTestCases(cases);
 });
