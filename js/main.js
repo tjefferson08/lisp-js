@@ -15,9 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", event => {
     event.preventDefault();
     const result = repl(prompt.value);
+    const userInput = document.createElement("div");
+    userInput.innerText = `> ${prompt.value}`;
     prompt.value = "";
     const toPrint = document.createElement("div");
     toPrint.innerText = result;
+    scrollback.appendChild(userInput);
     scrollback.appendChild(toPrint);
   });
 });
