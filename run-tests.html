@@ -2,6 +2,35 @@
 <html>
   <head>
     <title>Tests</title>
+    <script type="text/javascript">
+      window.assert = boolExpr => {
+        assertEqual(boolExpr, true);
+      };
+
+      window.assertEqual = (a, b) => {
+        if (a instanceof Array && b && a.length === b.length) {
+          return a.every((el, idx) => assertEqual(el, b[idx]));
+        }
+
+        if (a !== b) {
+          throw new Error(`Expected ${a}, got ${b}`);
+        }
+        return true;
+      };
+
+      const tests = [];
+      window.test = (desc, cb) => tests.push([desc, cb]);
+      const run = () => {
+        tests.forEach(
+          ([desc, cb]) => console.log(`Running test: ${desc}`) || cb()
+        );
+        console.log(`${tests.length} tests passed!`);
+      };
+    </script>
     <script type="module" src="./js/reader.test.js"></script>
+    <script type="module" src="./js/printer.test.js"></script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", run);
+    </script>
   </head>
 </html>

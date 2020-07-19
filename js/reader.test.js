@@ -1,27 +1,7 @@
 import { read_str } from "./reader.js";
 import { List, Vector } from "./utils.js";
 
-const assert = boolExpr => {
-  assertEqual(boolExpr, true);
-};
-
-const assertEqual = (a, b) => {
-  if (a instanceof Array && b && a.length === b.length) {
-    return a.every((el, idx) => assertEqual(el, b[idx]));
-  }
-
-  if (a !== b) {
-    throw new Error(`Expected ${a}, got ${b}`);
-  }
-  return true;
-};
-
-const tests = [];
-const test = (desc, cb) => tests.push([desc, cb]);
-const run = () => {
-  tests.forEach(([desc, cb]) => console.log(`Running test: ${desc}`) || cb());
-  console.log(`${tests.length} tests passed!`);
-};
+const { assert, assertEqual, test } = window;
 
 const runTestCases = cases =>
   cases.forEach(({ input, expected }) => {
@@ -122,5 +102,3 @@ test("maps", () => {
     assert(actual instanceof Map);
   });
 });
-
-run();

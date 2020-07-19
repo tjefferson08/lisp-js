@@ -11,3 +11,9 @@ export function* in_pairs(iterable) {
     next = iterator.next();
   }
 }
+
+export const is_symbol = ast =>
+  typeof ast === "symbol" && !/^:/.test(Symbol.keyFor(ast));
+
+export const is_keyword = ast =>
+  typeof ast === "symbol" && /^:/.test(Symbol.keyFor(ast));
