@@ -11,7 +11,7 @@ for (let [sym, fn] of core.ns) {
   REPL_ENV = REPL_ENV.set(sym, fn);
 }
 
-REPL_ENV = REPL_ENV.set("eval", ast => EVAL(ast, REPL_ENV));
+REPL_ENV = REPL_ENV.set(Symbol.for("eval"), ast => EVAL(ast, REPL_ENV));
 
 const READ = read_str;
 const PRINT = pr_str;
@@ -34,14 +34,14 @@ const EVAL = (ast, _env) => {
       case "def!": {
         const [_symbol, binding, value] = ast;
         const evaledValue = EVAL(value, env);
-        env.setGlobal(Symbol.keyFor(binding), evaledValue);
+        env.setGlobal(binding, evaledValue);
         return evaledValue;
       }
       case "let*": {
         let innerEnv = createEnv({ outer: REPL_ENV });
         const [_symbol, bindingList, formToEval] = ast;
         for (const [sym, val] of in_pairs(bindingList)) {
-          innerEnv = innerEnv.set(Symbol.keyFor(sym), EVAL(val, innerEnv));
+          innerEnv = innerEnv.set(sym, EVAL(val, innerEnv));
         }
         env = innerEnv;
         ast = formToEval;
@@ -108,7 +108,7 @@ const EVAL = (ast, _env) => {
 
 const eval_ast = (ast, replEnv) => {
   if (is_symbol(ast)) {
-    return replEnv.get(Symbol.keyFor(ast));
+    return replEnv.get(ast);
   }
 
   if (ast instanceof List || ast instanceof Vector) {

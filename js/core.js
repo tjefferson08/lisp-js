@@ -57,4 +57,4 @@ export const ns = new Map([
   ["deref", Atom.deref],
   ["reset!", Atom.reset],
   ["swap!", Atom.swap]
-]);
+].map(([sym, fn]) => [Symbol.for(sym), fn]))

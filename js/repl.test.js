@@ -15,10 +15,9 @@ test("basic math and variables", () => {
 });
 
 // TODO: helper to reset repl environment (to avoid test pollution)
-// TODO: fix this test! function environments don't have access to inner symbols
 test("functions", () => {
     let result = repl("(def! inc2 (fn* (i) (+ 2 i)))")
     assertEqual(result, "#<function>")
-    // result = repl("(inc2 11)")
-    // assertEqual(result, "13")
+    result = repl("(inc2 11)")
+    assertEqual(result, "13")
 });
