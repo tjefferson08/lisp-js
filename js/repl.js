@@ -1,5 +1,7 @@
+import { read_str } from "./reader.js";
+
 export const repl = str => {
-  console.log("about to read str", str);
-  const evaledResult = str; // TODO: implement eval oh and read and print
+  const readResult = read_str(str);
+  const evaledResult = readResult; // TODO: implement eval oh and read and print
   return `[Printed]: ${evaledResult}`;
 };
