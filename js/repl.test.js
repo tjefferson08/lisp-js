@@ -37,6 +37,6 @@ test("functions", () => {
 });
 
 test("eval", () => {
-  let result = repl('(eval "(+ 1 2 3)")');
+  let result = repl('(eval (list + 1 2 3))');
   assertEqual(result, "6");
 });
