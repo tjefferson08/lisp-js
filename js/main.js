@@ -7,9 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const prompt = document.querySelector("[name=prompt]");
   const clearBtn = document.querySelector(".clear-btn");
   const scrollback = document.querySelector(".scrollback");
+  const scriptFileInput = document.querySelector("[name=script_file]");
 
   clearBtn.addEventListener("click", () => {
     scrollback.innerHTML = "";
+  });
+
+  scriptFileInput.addEventListener("change", () => {
+    // store the file content off in a global so the runtime can grab it
+    // (runtime is not async-aware, otherwise we could probably do this on-demand)
+    scriptFileInput.files[0].text().then(text => {
+      window.scriptFileContent = text;
+    });
   });
 
   form.addEventListener("submit", event => {
