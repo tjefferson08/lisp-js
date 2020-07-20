@@ -37,6 +37,14 @@ test("functions", () => {
 });
 
 test("eval", () => {
-  let result = repl('(eval (list + 1 2 3))');
+  let result = repl("(eval (list + 1 2 3))");
   assertEqual(result, "6");
+});
+
+test("slurp", () => {
+  window.scriptFileContent = "here is raw text";
+
+  // slurp takes no args, just yanks whatever's in the global
+  let result = repl("(slurp)");
+  assertEqual(result, '"here is raw text"');
 });
