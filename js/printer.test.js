@@ -97,24 +97,24 @@ test("can shadow values from parent scopes", () => {
   const b = Symbol.for("b");
 
   const parentEnv = createEnv().set(a, 123);
-  assertEqual(parentEnv.get(a), 123)
+  assertEqual(parentEnv.get(a), 123);
 
   const childEnv = createEnv({ outer: parentEnv })
     .set(a, 456)
-    .set(b, 100)
+    .set(b, 100);
 
-  assertEqual(parentEnv.get(a), 123)
-  assertEqual(childEnv.get(a), 456)
-  assertEqual(childEnv.get(b), 100)
+  assertEqual(parentEnv.get(a), 123);
+  assertEqual(childEnv.get(a), 456);
+  assertEqual(childEnv.get(b), 100);
 
   const grandchildEnv = createEnv({ outer: childEnv })
-        .set(a, 789)
-        .set(b, 200)
+    .set(a, 789)
+    .set(b, 200);
 
-  assertEqual(parentEnv.get(a), 123)
-  assertEqual(childEnv.get(a), 456)
-  assertEqual(grandchildEnv.get(a), 789)
+  assertEqual(parentEnv.get(a), 123);
+  assertEqual(childEnv.get(a), 456);
+  assertEqual(grandchildEnv.get(a), 789);
 
-  assertEqual(childEnv.get(b), 100)
-  assertEqual(grandchildEnv.get(b), 200)
+  assertEqual(childEnv.get(b), 100);
+  assertEqual(grandchildEnv.get(b), 200);
 });

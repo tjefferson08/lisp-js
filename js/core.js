@@ -32,29 +32,31 @@ const prStr = (...args) => args.map(x => pr_str(x, true)).join(" ");
 // (str 1 2 3) => "123"
 const str = (...args) => args.reduce((acc, x) => acc + pr_str(x, false), "");
 
-export const ns = new Map([
-  ["+", (...args) => args.reduce((sum, n) => sum + n)],
-  ["-", (...args) => args.reduce((difference, n) => difference - n)],
-  ["*", (...args) => args.reduce((prod, n) => prod * n)],
-  ["/", (...args) => args.reduce((div, n) => div / n)],
-  ["prn", (...args) => console.log(prStr(...args)) || null],
-  ["pr-str", prStr],
-  ["println", (...args) => console.log(str(...args)) || null],
-  ["str", str],
-  ["list", (...args) => List.of(...args)],
-  ["list?", coll => coll instanceof List],
-  ["empty?", list => list.length === 0],
-  ["count", list => (list === null ? 0 : list.length)],
-  ["=", equal],
-  ["<", lt],
-  ["<=", lte],
-  [">", gt],
-  [">=", gte],
-  ["read-string", read_str],
-  ["slurp", filename => fs.readFileSync(filename, { encoding: "utf8" })],
-  ["atom", Atom.build],
-  ["atom?", Atom.is_atom],
-  ["deref", Atom.deref],
-  ["reset!", Atom.reset],
-  ["swap!", Atom.swap]
-].map(([sym, fn]) => [Symbol.for(sym), fn]))
+export const ns = new Map(
+  [
+    ["+", (...args) => args.reduce((sum, n) => sum + n)],
+    ["-", (...args) => args.reduce((difference, n) => difference - n)],
+    ["*", (...args) => args.reduce((prod, n) => prod * n)],
+    ["/", (...args) => args.reduce((div, n) => div / n)],
+    ["prn", (...args) => console.log(prStr(...args)) || null],
+    ["pr-str", prStr],
+    ["println", (...args) => console.log(str(...args)) || null],
+    ["str", str],
+    ["list", (...args) => List.of(...args)],
+    ["list?", coll => coll instanceof List],
+    ["empty?", list => list.length === 0],
+    ["count", list => (list === null ? 0 : list.length)],
+    ["=", equal],
+    ["<", lt],
+    ["<=", lte],
+    [">", gt],
+    [">=", gte],
+    ["read-string", read_str],
+    ["slurp", () => window.scriptFileContent],
+    ["atom", Atom.build],
+    ["atom?", Atom.is_atom],
+    ["deref", Atom.deref],
+    ["reset!", Atom.reset],
+    ["swap!", Atom.swap]
+  ].map(([sym, fn]) => [Symbol.for(sym), fn])
+);

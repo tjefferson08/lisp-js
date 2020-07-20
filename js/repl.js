@@ -1,8 +1,8 @@
 import { read_str } from "./reader.js";
 import { pr_str } from "./printer.js";
-import { create as createEnv  } from './env.js'
-import { List, Vector, is_symbol, in_pairs, interleave } from './utils.js'
-import * as core from "./core.js"
+import { create as createEnv } from "./env.js";
+import { List, Vector, is_symbol, in_pairs, interleave } from "./utils.js";
+import * as core from "./core.js";
 
 // TODO do better than mutating this in lower scopes
 let REPL_ENV = createEnv();
@@ -78,7 +78,7 @@ const EVAL = (ast, _env) => {
             binds: [...in_pairs(interleave(params, args))]
           });
           return EVAL(body, fnEnv);
-        };
+        }
 
         ast = {
           ast: body,
