@@ -34,6 +34,13 @@ test("functions", () => {
   assertEqual(result, "#<function>");
   result = repl("(inc2 11)");
   assertEqual(result, "13");
+
+  result = repl(
+    "(def! sum2 (fn* (n acc) (if (= 0 n) acc (sum2 (- n 1) (+ 1 acc)))))"
+  );
+  assertEqual(result, "#<function>");
+  result = repl("(sum2 100 0)");
+  assertEqual(result, "100");
 });
 
 test("eval", () => {
