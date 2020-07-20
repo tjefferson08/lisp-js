@@ -4,14 +4,21 @@ import { create as createEnv } from "./env.js";
 import { List, Vector, is_symbol, in_pairs, interleave } from "./utils.js";
 import * as core from "./core.js";
 
+export const reload = () => {
+  REPL_ENV = buildReplEnv();
+};
+
+const buildReplEnv = () => {
+  let env = createEnv();
+  for (let [sym, fn] of core.ns) {
+    env = env.set(sym, fn);
+  }
+
+  return env.set(Symbol.for("eval"), ast => EVAL(ast, env));
+};
+
 // TODO do better than mutating this in lower scopes
-let REPL_ENV = createEnv();
-
-for (let [sym, fn] of core.ns) {
-  REPL_ENV = REPL_ENV.set(sym, fn);
-}
-
-REPL_ENV = REPL_ENV.set(Symbol.for("eval"), ast => EVAL(ast, REPL_ENV));
+let REPL_ENV = buildReplEnv();
 
 const READ = read_str;
 const PRINT = pr_str;

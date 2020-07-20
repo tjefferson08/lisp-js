@@ -1,7 +1,7 @@
-import { repl } from "./repl.js";
+import { repl, reload } from "./repl.js";
 import { List, Vector } from "./utils.js";
 
-const { assert, assertEqual, test } = window;
+const { assert, assertEqual, assertSymbolNotFound, test } = window;
 
 test("basic math and variables", () => {
   let result = repl("(+ 1 2)");
@@ -14,10 +14,29 @@ test("basic math and variables", () => {
   assertEqual(result, "140");
 });
 
-// TODO: helper to reset repl environment (to avoid test pollution)
+test("reload helper should reset repl env", () => {
+  let result = repl("(def! a 123)");
+  assertEqual(result, "123");
+  result = repl("a");
+  assertEqual(result, "123");
+
+  reload();
+
+  assertSymbolNotFound(() => repl("a"));
+  result = repl("(def! a true)");
+  assertEqual(result, "true");
+  result = repl("a");
+  assertEqual(result, "true");
+});
+
 test("functions", () => {
   let result = repl("(def! inc2 (fn* (i) (+ 2 i)))");
   assertEqual(result, "#<function>");
   result = repl("(inc2 11)");
   assertEqual(result, "13");
+});
+
+test("eval", () => {
+  let result = repl('(eval "(+ 1 2 3)")');
+  assertEqual(result, "6");
 });

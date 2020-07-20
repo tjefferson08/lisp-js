@@ -13,9 +13,17 @@
         }
 
         if (a !== b) {
-          throw new Error(`Expected ${a}, got ${b}`);
+          throw new Error(`Expected ${b}, got ${a}`);
         }
         return true;
+      };
+
+      window.assertSymbolNotFound = cb => {
+        try {
+          cb();
+        } catch (err) {
+          assert(/Symbol '\w*' not found/.test(err.message));
+        }
       };
 
       const tests = [];
