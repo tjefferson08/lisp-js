@@ -106,3 +106,23 @@ test("maps", () => {
     assert(actual instanceof Map);
   });
 });
+
+test("@ reader macro, expands to deref", () => {
+  const deref = Symbol.for("deref");
+  const cases = [
+    {
+      input: "@my-atom",
+      expected: List.of(deref, Symbol.for("my-atom"))
+    },
+    {
+      input: "@@my-atom",
+      expected: List.of(deref, List.of(deref, Symbol.for("my-atom")))
+    },
+    {
+      input: "@(get-atom 1 2)",
+      expected: List.of(deref, List.of(Symbol.for("get-atom"), 1, 2))
+    }
+  ];
+
+  runTestCases(cases);
+});

@@ -49,7 +49,7 @@ export const pr_str = (malData, printReadably = true) => {
     }
 
     if (Atom.is_atom(malData)) {
-      return `(atom ${helper(malData.value)})`
+      return `(atom ${helper(malData.value)})`;
     }
 
     return "UNKNOWN";

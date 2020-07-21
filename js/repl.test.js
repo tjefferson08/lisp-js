@@ -67,21 +67,24 @@ test("atoms", () => {
   let result = repl("(def! a (atom 1))");
   assertEqual(result, "(atom 1)");
 
-  result = repl("(deref a)")
-  assertEqual(result, "1");
+  result = repl("[(deref a) @a]");
+  assertEqual(result, "[1 1]");
 
-  result = repl("(reset! a 100)")
+  result = repl("(reset! a 100)");
   assertEqual(result, "100");
 
-  result = repl("(deref a)")
-  assertEqual(result, "100");
+  result = repl("[(deref a) @a]");
+  assertEqual(result, "[100 100]");
 
-  result = repl("(swap! a + 100)")
+  result = repl("(swap! a + 100)");
   assertEqual(result, "200");
 
-  result = repl("(atom? a)")
+  result = repl("[(deref a) @a]");
+  assertEqual(result, "[200 200]");
+
+  result = repl("(atom? a)");
   assertEqual(result, "true");
 
-  result = repl("(atom? 100)")
+  result = repl("(atom? 100)");
   assertEqual(result, "false");
-})
+});

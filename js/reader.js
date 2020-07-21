@@ -1,24 +1,20 @@
 import { in_pairs, List, Vector } from "./utils.js";
 
-const buildReader = tokens => ({ tokens, position: 0 });
-
-const next = reader => {
-  if (reader.position >= reader.tokens.length) {
-    throw new Error("EOF");
+const buildReader = tokens => ({
+  next() {
+    if (!tokens.length) {
+      throw new Error("EOF");
+    }
+    const [nextToken, ...remaining] = tokens;
+    return [nextToken, buildReader(remaining)];
+  },
+  peek() {
+    if (!tokens.length) {
+      throw new Error("EOF");
+    }
+    return tokens[0];
   }
-
-  return [
-    reader.tokens[reader.position],
-    { tokens: reader.tokens, position: reader.position + 1 }
-  ];
-};
-
-const peek = reader => {
-  if (reader.position >= reader.tokens.length) {
-    throw new Error("EOF");
-  }
-  return reader.tokens[reader.position];
-};
+});
 
 const TOKEN_REGEXP = /[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"?|;.*|[^\s\[\]{}('"`,;)]*)/;
 const tokenize = input_str => {
@@ -39,20 +35,20 @@ const tokenize = input_str => {
 const read_list = (reader, { closingToken, builder }) => {
   const value_list = [];
   let currentReader = reader;
-  while (peek(currentReader)[0] !== closingToken) {
+  while (currentReader.peek()[0] !== closingToken) {
     let [value, nextReader] = read_form(currentReader);
     currentReader = nextReader;
     value_list.push(value);
   }
   // consume closing ')/]/}'
-  let [_nextToken, nextReader] = next(currentReader);
+  let [_nextToken, nextReader] = currentReader.next();
   currentReader = nextReader;
 
   return [builder(value_list), currentReader];
 };
 
 const read_atom = reader => {
-  const [nextToken, newReader] = next(reader);
+  const [nextToken, newReader] = reader.next();
   if (nextToken.match(/^[-]?\d+$/)) {
     return [Number(nextToken), newReader];
   } else if (["true", "false"].includes(nextToken)) {
@@ -90,10 +86,14 @@ const COLLECTION_DATA = {
 };
 
 const read_form = reader => {
-  const top = peek(reader);
+  const top = reader.peek();
   if (Object.keys(COLLECTION_DATA).includes(top[0])) {
-    const [_, nextReader] = next(reader);
+    const [_, nextReader] = reader.next();
     return read_list(nextReader, COLLECTION_DATA[top[0]]);
+  } else if (top[0] === "@") {
+    const [_, nextReader] = reader.next();
+    const [derefTarget, readerAfterDeref] = read_form(nextReader);
+    return [List.of(Symbol.for("deref"), derefTarget), readerAfterDeref];
   } else {
     return read_atom(reader);
   }
