@@ -1,4 +1,4 @@
-import { List, Vector, is_symbol, is_keyword } from "./utils.js";
+import { Atom, List, Vector, is_symbol, is_keyword } from "./utils.js";
 
 export const pr_str = (malData, printReadably = true) => {
   const helper = malData => {
@@ -48,9 +48,9 @@ export const pr_str = (malData, printReadably = true) => {
       );
     }
 
-    // if (Atom.is_atom(malData)) {
-    //   return `(atom ${helper(malData.value)})`
-    // }
+    if (Atom.is_atom(malData)) {
+      return `(atom ${helper(malData.value)})`
+    }
 
     return "UNKNOWN";
   };

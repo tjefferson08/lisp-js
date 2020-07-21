@@ -1,9 +1,10 @@
 import { repl, reload } from "./repl.js";
 import { List, Vector } from "./utils.js";
 
-const { assert, assertEqual, assertSymbolNotFound, test } = window;
+const { assertEqual, assertSymbolNotFound, test } = window;
 
 test("basic math and variables", () => {
+  reload();
   let result = repl("(+ 1 2)");
   assertEqual(result, "3");
   result = repl("(def! a (+ 1 2 3 4))");
@@ -15,6 +16,7 @@ test("basic math and variables", () => {
 });
 
 test("reload helper should reset repl env", () => {
+  reload();
   let result = repl("(def! a 123)");
   assertEqual(result, "123");
   result = repl("a");
@@ -30,6 +32,7 @@ test("reload helper should reset repl env", () => {
 });
 
 test("functions", () => {
+  reload();
   let result = repl("(def! inc2 (fn* (i) (+ 2 i)))");
   assertEqual(result, "#<function>");
   result = repl("(inc2 11)");
@@ -44,14 +47,41 @@ test("functions", () => {
 });
 
 test("eval", () => {
+  reload();
   let result = repl("(eval (list + 1 2 3))");
   assertEqual(result, "6");
 });
 
 test("slurp", () => {
+  reload();
   window.scriptFileContent = "here is raw text";
 
   // slurp takes no args, just yanks whatever's in the global
   let result = repl("(slurp)");
   assertEqual(result, '"here is raw text"');
 });
+
+test("atoms", () => {
+  reload();
+
+  let result = repl("(def! a (atom 1))");
+  assertEqual(result, "(atom 1)");
+
+  result = repl("(deref a)")
+  assertEqual(result, "1");
+
+  result = repl("(reset! a 100)")
+  assertEqual(result, "100");
+
+  result = repl("(deref a)")
+  assertEqual(result, "100");
+
+  result = repl("(swap! a + 100)")
+  assertEqual(result, "200");
+
+  result = repl("(atom? a)")
+  assertEqual(result, "true");
+
+  result = repl("(atom? 100)")
+  assertEqual(result, "false");
+})
