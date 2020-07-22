@@ -87,26 +87,25 @@ const EVAL = (ast, _env) => {
           return EVAL(body, fnEnv);
         }
 
-        ast = {
-          ast: body,
-          params,
-          env,
-          fn: closure
-        };
+        closure.ast = body;
+        closure.params = params;
+        closure.env = env;
+        closure.type = "fn*";
+        ast = closure;
         break;
       }
       default: {
         const evaledList = eval_ast(ast, env);
         const [fn, ...args] = evaledList;
-        if (typeof fn === "function") {
-          return fn(...args);
-        } else {
+        if (fn.type === "fn*") {
           ast = fn.ast;
           const newEnv = createEnv({
             outer: fn.env,
             binds: [...in_pairs(interleave(fn.params, args))]
           });
           env = newEnv;
+        } else {
+          return fn(...args);
         }
       }
     }

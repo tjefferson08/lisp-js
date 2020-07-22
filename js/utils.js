@@ -50,8 +50,7 @@ export const Atom = {
   // TODO: concurrent access?
   // TODO: handle fns other than those from core.ns (two types of malData for fns!)
   swap: (atom, updateFn, ...args) => {
-    console.log("swapping", updateFn, ...args);
-    atom.value = EVAL(updateFn(atom.value, ...args));
+    atom.value = updateFn(atom.value, ...args);
     return atom.value;
   }
 };

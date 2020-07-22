@@ -82,6 +82,12 @@ test("atoms", () => {
   result = repl("[(deref a) @a]");
   assertEqual(result, "[200 200]");
 
+  result = repl("(swap! a (fn* (atom-val inc-amt) (+ atom-val inc-amt)) 25)");
+  assertEqual(result, "225");
+
+  result = repl("[(deref a) @a]");
+  assertEqual(result, "[225 225]");
+
   result = repl("(atom? a)");
   assertEqual(result, "true");
 

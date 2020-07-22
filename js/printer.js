@@ -10,10 +10,7 @@ export const pr_str = (malData, printReadably = true) => {
       return Symbol.keyFor(malData);
     }
 
-    if (
-      typeof malData === "function" ||
-      (typeof malData === "object" && typeof malData.fn === "function")
-    ) {
+    if (typeof malData === "function") {
       return "#<function>";
     }
 
