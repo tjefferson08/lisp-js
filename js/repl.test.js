@@ -94,3 +94,29 @@ test("atoms", () => {
   result = repl("(atom? 100)");
   assertEqual(result, "false");
 });
+
+test("cons", () => {
+  reload();
+
+  let result = repl("(cons 1 (list 2 3))");
+  assertEqual(result, "(1 2 3)");
+
+  result = repl("(cons 1 (list))");
+  assertEqual(result, "(1)");
+
+  result = repl("(cons (list 1 2) (list 3 4))");
+  assertEqual(result, "((1 2) 3 4)");
+});
+
+test("concat", () => {
+  reload();
+
+  let result = repl("(concat (list 1) (list 2 3) (list 4 5))");
+  assertEqual(result, "(1 2 3 4 5)");
+
+  result = repl("(concat (list 1) (list))");
+  assertEqual(result, "(1)");
+
+  result = repl("(concat (list) (list 1 2) (list (list 3 4)))");
+  assertEqual(result, "(1 2 (3 4))");
+});

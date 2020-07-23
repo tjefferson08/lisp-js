@@ -57,6 +57,8 @@ export const ns = new Map(
     ["atom?", Atom.is_atom],
     ["deref", Atom.deref],
     ["reset!", Atom.reset],
-    ["swap!", Atom.swap]
+    ["swap!", Atom.swap],
+    ["cons", (x, xs) => List.of(x, ...xs)],
+    ["concat", (...colls) => colls.reduce((acc, coll) => acc.concat(coll))]
   ].map(([sym, fn]) => [Symbol.for(sym), fn])
 );
