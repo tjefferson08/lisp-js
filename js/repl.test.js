@@ -120,3 +120,18 @@ test("concat", () => {
   result = repl("(concat (list) (list 1 2) (list (list 3 4)))");
   assertEqual(result, "(1 2 (3 4))");
 });
+
+test("quote", () => {
+  reload();
+
+  let result = repl("(quote (1 2 3))");
+  assertEqual(result, "(1 2 3)");
+
+  result = repl("(quote abc)");
+  assertEqual(result, "abc");
+
+  result = repl("(def! xs (quote (+ 1 2 3)))");
+  assertEqual(result, "(+ 1 2 3)");
+  result = repl("(eval xs)");
+  assertEqual(result, "6");
+});

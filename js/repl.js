@@ -74,6 +74,10 @@ const EVAL = (ast, _env) => {
         }
         break;
       }
+      case "quote": {
+        const [_quoteSym, quotedAst] = ast;
+        return quotedAst;
+      }
       case "fn*": {
         const [fnSymbol, params, body] = ast;
         function closure(...args) {
