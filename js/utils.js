@@ -31,6 +31,8 @@ export const is_symbol = ast =>
 export const is_keyword = ast =>
   typeof ast === "symbol" && /^:/.test(Symbol.keyFor(ast));
 
+export const is_pair = ast => ast instanceof List && ast.length > 0;
+
 export const Atom = {
   is_atom: item => item.type === "atom",
   build: malData => ({ type: "atom", value: malData }),
@@ -48,7 +50,6 @@ export const Atom = {
     return atom.value;
   },
   // TODO: concurrent access?
-  // TODO: handle fns other than those from core.ns (two types of malData for fns!)
   swap: (atom, updateFn, ...args) => {
     atom.value = updateFn(atom.value, ...args);
     return atom.value;

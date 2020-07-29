@@ -1,8 +1,35 @@
 import { read_str } from "./reader.js";
 import { pr_str } from "./printer.js";
 import { create as createEnv } from "./env.js";
-import { List, Vector, is_symbol, in_pairs, interleave } from "./utils.js";
+import {
+  List,
+  Vector,
+  is_symbol,
+  is_pair,
+  in_pairs,
+  interleave
+} from "./utils.js";
 import * as core from "./core.js";
+
+const quasiquote = ast => {
+  if (!is_pair(ast)) {
+    return List.of(Symbol.for("quote"), ast);
+  }
+
+  if (ast[0] === Symbol.for("unquote")) {
+    return ast[1];
+  }
+
+  if (is_pair(ast[0]) && ast[0][0] === Symbol.for("splice-unquote")) {
+    return List.of(Symbol.for("concat"), ast[0][1], quasiquote(ast.slice(1)));
+  }
+
+  return List.of(
+    Symbol.for("cons"),
+    quasiquote(ast[0]),
+    quasiquote(ast.slice(1))
+  );
+};
 
 export const reload = () => {
   REPL_ENV = buildReplEnv();
@@ -77,6 +104,11 @@ const EVAL = (ast, _env) => {
       case "quote": {
         const [_quoteSym, quotedAst] = ast;
         return quotedAst;
+      }
+      case "quasiquote": {
+        const [_sym, quotedAst] = ast;
+        ast = quasiquote(quotedAst);
+        break;
       }
       case "fn*": {
         const [fnSymbol, params, body] = ast;

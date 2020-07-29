@@ -135,3 +135,22 @@ test("quote", () => {
   result = repl("(eval xs)");
   assertEqual(result, "6");
 });
+
+test("quasiquote", () => {
+  reload();
+
+  let result = repl("(quasiquote (1 2 3))");
+  assertEqual(result, "(1 2 3)");
+
+  result = repl("(quasiquote abc)");
+  assertEqual(result, "abc");
+
+  result = repl("(def! lst (quote (2 3 abc)))");
+  assertEqual(result, "(2 3 abc)");
+
+  result = repl("(quasiquote (1 (unquote lst)))");
+  assertEqual(result, "(1 (2 3 abc))");
+
+  result = repl("(quasiquote (1 (splice-unquote lst)))");
+  assertEqual(result, "(1 2 3 abc)");
+});
