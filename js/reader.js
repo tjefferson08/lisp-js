@@ -85,15 +85,26 @@ const COLLECTION_DATA = {
   }
 };
 
+const READER_MACROS_BY_SYNTAX = {
+  "@": "deref",
+  "'": "quote",
+  "`": "quasiquote",
+  "~": "unquote",
+  "~@": "splice-unquote"
+};
+
 const read_form = reader => {
   const top = reader.peek();
   if (Object.keys(COLLECTION_DATA).includes(top[0])) {
     const [_, nextReader] = reader.next();
     return read_list(nextReader, COLLECTION_DATA[top[0]]);
-  } else if (top[0] === "@") {
+  } else if (READER_MACROS_BY_SYNTAX[top]) {
     const [_, nextReader] = reader.next();
-    const [derefTarget, readerAfterDeref] = read_form(nextReader);
-    return [List.of(Symbol.for("deref"), derefTarget), readerAfterDeref];
+    const [macroTarget, readerAfterMacro] = read_form(nextReader);
+    return [
+      List.of(Symbol.for(READER_MACROS_BY_SYNTAX[top]), macroTarget),
+      readerAfterMacro
+    ];
   } else {
     return read_atom(reader);
   }

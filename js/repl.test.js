@@ -154,3 +154,28 @@ test("quasiquote", () => {
   result = repl("(quasiquote (1 (splice-unquote lst)))");
   assertEqual(result, "(1 2 3 abc)");
 });
+
+test("quoting reader macros", () => {
+  reload();
+
+  let result = repl("'(1 2 3)");
+  assertEqual(result, "(1 2 3)");
+
+  result = repl("'abc");
+  assertEqual(result, "abc");
+
+  result = repl("`(1 2 3)");
+  assertEqual(result, "(1 2 3)");
+
+  result = repl("`abc");
+  assertEqual(result, "abc");
+
+  result = repl("(def! lst '(2 3 abc))");
+  assertEqual(result, "(2 3 abc)");
+
+  result = repl("`(1 ~lst)");
+  assertEqual(result, "(1 (2 3 abc))");
+
+  result = repl("`(1 ~@lst)");
+  assertEqual(result, "(1 2 3 abc)");
+});
