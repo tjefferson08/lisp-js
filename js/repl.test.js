@@ -188,4 +188,19 @@ test("defmacro!", () => {
 
   result = repl("(tru)");
   assertEqual(result, "true");
+
+  result = repl("(defmacro! unless (fn* (pred a b) `(if ~pred ~b ~a)))");
+  assertEqual(result, "#<function>");
+
+  result = repl("(if true 1 2)");
+  assertEqual(result, "1");
+
+  result = repl("(unless true 1 2)");
+  assertEqual(result, "2");
+
+  result = repl("(if false 3 4)");
+  assertEqual(result, "4");
+
+  result = repl("(unless false 3 4)");
+  assertEqual(result, "3");
 });

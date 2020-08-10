@@ -33,8 +33,27 @@ export const is_keyword = ast =>
 
 export const is_pair = ast => ast instanceof List && ast.length > 0;
 
-export const is_macro_call = (ast, env) =>
-  is_pair(ast) && env.get(ast[0]).is_macro;
+export const is_macro_call = (ast, env) => {
+  try {
+    return !!(
+      ast instanceof List &&
+      ast.length > 0 &&
+      is_symbol(ast[0]) &&
+      env.get(ast[0]).is_macro
+    );
+  } catch (err) {
+    return false;
+  }
+};
+
+export const macroexpand = (ast, env) => {
+  let _ast = ast;
+  while (is_macro_call(_ast, env)) {
+    const macro = env.get(_ast[0]);
+    _ast = macro(...ast.slice(1));
+  }
+  return _ast;
+};
 
 export const Atom = {
   is_atom: item => item.type === "atom",

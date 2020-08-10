@@ -7,7 +7,8 @@ import {
   is_symbol,
   is_pair,
   in_pairs,
-  interleave
+  interleave,
+  macroexpand
 } from "./utils.js";
 import * as core from "./core.js";
 
@@ -50,8 +51,9 @@ let REPL_ENV = buildReplEnv();
 const READ = read_str;
 const PRINT = pr_str;
 
-const EVAL = (ast, _env) => {
+const EVAL = (_ast, _env) => {
   let env = _env;
+  let ast = _ast;
 
   while (true) {
     if (!(ast instanceof List)) {
@@ -60,6 +62,12 @@ const EVAL = (ast, _env) => {
 
     if (ast.length === 0) {
       return ast;
+    }
+
+    ast = macroexpand(ast, env);
+
+    if (!(ast instanceof List)) {
+      return eval_ast(ast, env);
     }
 
     const [symbol, ...restOfList] = ast;
