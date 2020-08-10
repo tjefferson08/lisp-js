@@ -33,6 +33,9 @@ export const is_keyword = ast =>
 
 export const is_pair = ast => ast instanceof List && ast.length > 0;
 
+export const is_macro_call = (ast, env) =>
+  is_pair(ast) && env.get(ast[0]).is_macro;
+
 export const Atom = {
   is_atom: item => item.type === "atom",
   build: malData => ({ type: "atom", value: malData }),

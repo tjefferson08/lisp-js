@@ -130,6 +130,13 @@ const EVAL = (ast, _env) => {
         ast = closure;
         break;
       }
+      case "defmacro!": {
+        const [_symbol, binding, value] = ast;
+        const evaledValue = EVAL(value, env);
+        evaledValue.is_macro = true;
+        env.setGlobal(binding, evaledValue);
+        return evaledValue;
+      }
       default: {
         const evaledList = eval_ast(ast, env);
         const [fn, ...args] = evaledList;

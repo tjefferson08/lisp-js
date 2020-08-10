@@ -179,3 +179,13 @@ test("quoting reader macros", () => {
   result = repl("`(1 ~@lst)");
   assertEqual(result, "(1 2 3 abc)");
 });
+
+test("defmacro!", () => {
+  reload();
+
+  let result = repl("(defmacro! tru (fn* () true))");
+  assertEqual(result, "#<function>");
+
+  result = repl("(tru)");
+  assertEqual(result, "true");
+});
