@@ -203,4 +203,7 @@ test("defmacro!", () => {
 
   result = repl("(unless false 3 4)");
   assertEqual(result, "3");
+
+  result = repl("(macroexpand (unless true 1 2))");
+  assertEqual(result, "(if true 2 1)");
 });

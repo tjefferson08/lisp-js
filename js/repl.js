@@ -145,6 +145,11 @@ const EVAL = (_ast, _env) => {
         env.setGlobal(binding, evaledValue);
         return evaledValue;
       }
+      case "macroexpand": {
+        const [_symbol, macro] = ast;
+        const expanded = macroexpand(macro, env);
+        return expanded;
+      }
       default: {
         const evaledList = eval_ast(ast, env);
         const [fn, ...args] = evaledList;
